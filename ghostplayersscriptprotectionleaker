@@ -1,0 +1,18 @@
+local OldNamecall
+OldNamecall = hookmetamethod(game, "__namecall", function(self, ...)
+    local args = { ... }
+    local method = getnamecallmethod()
+
+    if method == "HttpGet" and typeof(args[1]) == "string" then
+        local url = args[1]
+
+        local isOnrender = url:find("protected%-roblox%-scripts%.onrender%.com")
+        if isOnrender then
+            local result = OldNamecall(self, ...)
+            setclipboard(result)
+            return result
+        end
+    end
+
+    return OldNamecall(self, ...)
+end)
